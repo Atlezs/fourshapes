@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
       newProduct.startColor = Color(0xff4db6ac);
 
-      if (newProduct.restockAmt >= 2) {
+      if (newProduct.currentAmt > 1) {
         newProduct.endColor = Color(0xff80cbc4);
         newProduct.status = 'Safe';
       } else {
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
       } else {
         newProduct.pic = 'assets/syrup2.png';
       }
-      if (newProduct.restockAmt >= 2) {
+      if (newProduct.currentAmt > 1) {
         products.add(newProduct);
       } else {
         products.insert(0, newProduct);
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                                                   child: Text(
                                                     'Restock Amount: ' +
                                                         snapshot.data[index]
-                                                            .currentAmt
+                                                            .restockAmt
                                                             .toString(),
                                                     style: TextStyle(
                                                       color: Colors.white,
@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                                                   child: Text(
                                                     'Current Amount: ' +
                                                         snapshot.data[index]
-                                                            .restockAmt
+                                                            .currentAmt
                                                             .toString(),
                                                     style: TextStyle(
                                                       color: Colors.white,
