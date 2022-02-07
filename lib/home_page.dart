@@ -232,13 +232,3 @@ class PlaceInfo {
   PlaceInfo(this.productName, this.productShape, this.startColor, this.endColor,
       this.pic, this.restockAmt, this.currentAmt, this.status);
 }
-
-class NewProduct {
-  final String productName;
-  final String productShape;
-  final int restockAmt;
-  final int currentAmt;
-
-  NewProduct(
-      this.productName, this.productShape, this.currentAmt, this.restockAmt);
-}
