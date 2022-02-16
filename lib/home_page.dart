@@ -11,84 +11,82 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final double _borderRadius = 24;
 
+  @override
+  void initState() {
+    _getProducts();
+    super.initState();
+  }
+
   Future<List<PlaceInfo>> _getProducts() async {
-    var data = await http.get(
-        Uri.parse('https://fourshapes.azurewebsites.net/api/shape/getshapes'));
+    var data = await http.get(Uri.parse(
+        'https://thefourshapes.azurewebsites.net/api/Shape/GetShapes'));
 
     var jsonData = json.decode(data.body);
 
     List<PlaceInfo> products = [];
 
-    for (var product in jsonData) {
-      PlaceInfo newProduct = PlaceInfo(
-        product['productName'],
-        product['shapeName'],
-        product[''],
-        product[''],
-        product[''],
-        product['restockAmt'],
-        product['currentAmt'],
-        product[''],
-      );
+    setState(() {
+      for (var product in jsonData) {
+        PlaceInfo newProduct = PlaceInfo(
+          product['productName'],
+          product['shapeName'],
+          product[''],
+          product[''],
+          product[''],
+          product['restockAmt'],
+          product['currentAmt'],
+          product[''],
+        );
 
-      newProduct.startColor = Color(0xff4db6ac);
+        newProduct.startColor = Color(0xff4db6ac);
 
-      if (newProduct.currentAmt > 1) {
-        newProduct.endColor = Color(0xff80cbc4);
-        newProduct.status = 'Safe';
-      } else {
-        newProduct.startColor = Color(0xffff8a65);
-        newProduct.endColor = Color(0xffffab91);
-        newProduct.status = 'Urgent';
+        if (newProduct.currentAmt > 1) {
+          newProduct.endColor = Color(0xff80cbc4);
+          newProduct.status = 'Safe';
+        } else {
+          newProduct.startColor = Color(0xffff8a65);
+          newProduct.endColor = Color(0xffffab91);
+          newProduct.status = 'Urgent';
+        }
+
+        if (newProduct.productName == ('Box of Syringe')) {
+          newProduct.pic = 'assets/box2.png';
+        } else if (newProduct.productName == ('Panadol')) {
+          newProduct.pic = 'assets/panadol2.png';
+        } else if (newProduct.productName == ('Paracetemol')) {
+          newProduct.pic = 'assets/para.png';
+        } else {
+          newProduct.pic = 'assets/syrup2.png';
+        }
+        if (newProduct.currentAmt > 1) {
+          products.add(newProduct);
+        } else {
+          products.insert(0, newProduct);
+        }
       }
-
-      if (newProduct.productName == ('Box of Syringe')) {
-        newProduct.pic = 'assets/box2.png';
-      } else if (newProduct.productName == ('Panadol')) {
-        newProduct.pic = 'assets/panadol2.png';
-      } else if (newProduct.productName == ('Paracetemol')) {
-        newProduct.pic = 'assets/para.png';
-      } else {
-        newProduct.pic = 'assets/syrup2.png';
-      }
-      if (newProduct.currentAmt > 1) {
-        products.add(newProduct);
-      } else {
-        products.insert(0, newProduct);
-      }
-    }
-
+    });
     return products;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Center(child: Text('4Shapes')),
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [
-                const Color(0xff00695c),
-                const Color(0xff4db6ac),
-              ], tileMode: TileMode.clamp),
-            ),
-          ),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: FutureBuilder(
-                future: _getProducts(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.data == null) {
-                    return Container(
-                      child: const Center(
-                        child: Text('Loading...'),
-                      ),
-                    );
-                  } else {
-                    return ListView.builder(
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: FutureBuilder(
+              future: _getProducts(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.data == null) {
+                  return Container(
+                    child: const Center(
+                      child: Text('Loading...'),
+                    ),
+                  );
+                } else {
+                  return RefreshIndicator(
+                    onRefresh: _getProducts,
+                    child: ListView.builder(
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Center(
@@ -209,13 +207,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                       },
-                    );
-                  }
-                },
-              ),
+                    ),
+                  );
+                }
+              },
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
