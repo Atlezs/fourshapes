@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
 
         newProduct.startColor = Color(0xff4db6ac);
 
-        if (newProduct.currentAmt > 1) {
+        if (newProduct.currentAmt > newProduct.restockAmt) {
           newProduct.endColor = Color(0xff80cbc4);
           newProduct.status = 'Safe';
         } else {
@@ -58,10 +58,10 @@ class _HomePageState extends State<HomePage> {
         } else {
           newProduct.pic = 'assets/syrup2.png';
         }
-        if (newProduct.currentAmt > 1) {
-          products.add(newProduct);
-        } else {
+        if (newProduct.currentAmt < 4) {
           products.insert(0, newProduct);
+        } else {
+          products.add(newProduct);
         }
       }
     });
